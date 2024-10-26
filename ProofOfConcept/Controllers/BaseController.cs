@@ -12,7 +12,7 @@ namespace ProofOfConcept.Controllers
         [Route("GetTest")]
         public string GetTest()
         {
-            return "test is succesful";
+            return "test is succesful very";
         }
     }
 }
