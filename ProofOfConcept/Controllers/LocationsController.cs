@@ -13,5 +13,12 @@ namespace ProofOfConcept.Controllers
         {
             _locationsService = locationsService;
         }
+
+        [HttpPost]
+        [Route("TestGetLocations")]
+        public async Task<IActionResult> TestGetLocations()
+        {
+            return Ok(await _locationsService.GetAllFoodPlaces());
+        }
     }
 }

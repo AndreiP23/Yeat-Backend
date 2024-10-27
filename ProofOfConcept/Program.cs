@@ -3,6 +3,7 @@ using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ProofOfConcept.Controllers;
 using ProofOfConcept.Services;
 using System.Text;
 
@@ -32,7 +33,7 @@ var config = builder.Configuration;
 //});
 var firebaseApp = FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.FromFile("C:\\Users\\Andrei\\Downloads\\yeat-7841b-firebase-adminsdk-lfsmj-b7618b2d2d.json")
+    Credential = GoogleCredential.FromFile("C:\\Users\\ANDREI\\Downloads\\yeat-7841b-firebase-adminsdk-lfsmj-e6fcfa0b5a.json")
 });
 
 builder.Services.AddSingleton(firebaseApp);
@@ -41,6 +42,7 @@ builder.Services.AddSingleton(firebaseApp);
 builder.Services.AddSingleton(provider => FirebaseAuth.GetAuth(firebaseApp));
 
 builder.Services.AddSingleton<ILoginService, LoginService>();
+builder.Services.AddHttpClient<ILocationsService, LocationsService>();
 
 builder.Services.AddAuthentication(options =>
 {
