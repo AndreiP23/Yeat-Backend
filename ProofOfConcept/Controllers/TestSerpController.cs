@@ -17,11 +17,9 @@ namespace ProofOfConcept.Controllers
         [Route("TestGetPhotos")]
         public async Task<IActionResult> TestGetPhotos()
         {
-            double logitude = 26.0984804;
-            double latitude = 44.4346528;
-            string name = "Pizza Hut Bucuresti Universitate";
+            string dataId = "";
 
-            return Ok(await _serpService.GetMenuPhotosForLocationAsync(name, latitude, logitude));
+            return Ok(await _serpService.GetMenuPhotosForLocationAsync(dataId));
         }
         [HttpGet]
         [Route("TestGetLocation")]

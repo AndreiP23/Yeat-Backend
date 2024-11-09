@@ -7,11 +7,11 @@ namespace ProofOfConcept.Refit
     {
         [Get("/search")]
         Task<ApiResponse<SerpSearchResponse>> GetLocationMenuPhotosAsync(
-          [AliasAs("q")] string locationQuery,             // Location search query this can also be the name of the restaurant
+          [AliasAs("engine")] string engine,
+          [AliasAs("type")] string type,
+          [AliasAs("data_id")] string data_id,
           [AliasAs("category_id")] string category = "CgIYIQ",  // Static "menu" category
           [AliasAs("h1")] string h1 = "ro",  // Country
-          [AliasAs("latitude")] double? latitude = null,   // Latitude for location
-          [AliasAs("longitude")] double? longitude = null, // Longitude for location
           [AliasAs("api_key")] string apiKey = "<API_KEY>" // API key for authentication
           );
 

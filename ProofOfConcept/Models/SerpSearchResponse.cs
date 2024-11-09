@@ -2,13 +2,13 @@
 {
     public class SerpSearchResponse
     {
-        public List<Photo>? Photos { get; set; }
+        public List<Photos>? Photos { get; set; }
     }
-    public class Photo
+    public class Photos
     {
         // Add more fields id needed
-        // Dont know if Url or Title can be null yet
-        public string Url { get; set; } 
-        public string Title { get; set; }
+        public string thumbnail { get; set; } 
+        public string image { get; set; } 
+        public string photo_meta_serpapi_link { get; set; }
     }
 }

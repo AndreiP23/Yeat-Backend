@@ -6,7 +6,7 @@ namespace ProofOfConcept.Services
 {
     public interface ISerpService
     {
-        Task<List<Photo>> GetMenuPhotosForLocationAsync(string locationQuery, double? latitude = null, double? longitude = null);
+        Task<List<Photos>> GetMenuPhotosForLocationAsync(string dataId);
         Task<string> SearchForPlaceAsync(double logitude, double latitude, string name);
     }
     public class SerpService : ISerpService
@@ -20,38 +20,44 @@ namespace ProofOfConcept.Services
             _configuration = configuration;
         }
 
-        public async Task<List<Photo>> GetMenuPhotosForLocationAsync(string locationQuery, double? latitude = null, double? longitude = null)
+        public async Task<List<Photos>> GetMenuPhotosForLocationAsync(string dataId)
         {
             try
             {
+                var engine = "google_maps_photos";
+                var type = "search";
+                var data_id = "0x40b1ff40d8cd3897:0xeaa7b2d9fa6fc399";
+
                 var srpApiKey = _configuration["serp-api-key"];
 
-                if(srpApiKey is null)
-                    return new List<Photo>();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                if (srpApiKey is null)
+                    return new List<Photos>();
 
-                var response = await _serpApi.GetLocationMenuPhotosAsync(locationQuery, latitude: latitude, longitude: longitude, apiKey: srpApiKey);
+                var response = await _serpApi.GetLocationMenuPhotosAsync(engine, type, data_id, apiKey: srpApiKey);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return response.Content.Photos ?? new List<Photo>();
+                    var jsonResponse = response.Content.Photos;
+                    return jsonResponse;
                 }
                 else
                 {
                     Console.WriteLine($"Error: {response.Error?.Message}");
-                    return new List<Photo>();
+                    return new List<Photos>();
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception: {ex.Message}");
-                return new List<Photo>();
+                return new List<Photos>();
             }
         }
         public async Task<string> SearchForPlaceAsync(double logitude, double latitude, string name)
         {
             var engine = "google_maps";
-            var location = $"@{latitude},{logitude},10z"; // Latitude, Longitude, Zoom
             var type = "search";
+
+            var location = $"@{latitude},{logitude},10z"; // Latitude, Longitude, Zoom
             var srpApiKey = _configuration["serp-api-key"];
 
             if (srpApiKey is null)
