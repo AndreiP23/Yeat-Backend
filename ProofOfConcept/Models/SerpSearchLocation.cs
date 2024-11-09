@@ -2,7 +2,10 @@
 {
     public class SerpSearchLocation
     {
-        public List<Place> Places { get; set; }
+        //public string title { get; set; }
+        //public string place_id { get; set; }
+        //public string data_id { get; set; }
+        public Place place_results { get; set; }
     }
     public class Place
     {
