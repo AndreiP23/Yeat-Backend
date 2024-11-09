@@ -5,22 +5,21 @@ namespace ProofOfConcept.Services
 {
     public interface ILocationsService
     {
-        Task<List<Locations>> GetAllFoodPlaces();
+        Task<List<Locations>> GetAllFoodPlaces(string amenity);
     }
     public class LocationsService : ILocationsService
     {
         private static readonly string OverpassUrl = "https://overpass-api.de/api/interpreter";
-        private string GenerateOverpassQuery()
+        private string GenerateOverpassQuery(string amenity)
         {
-            return @"[out:json];
-                        area[""ISO3166-2""=""RO-B""]->.searchArea;  // This targets the Bucharest area using Romania's ISO code
+            // This targets the Bucharest area using Romania's ISO code
+            // restaurant, fast_food
+            return @$"[out:json];
+                        area[""ISO3166-2""=""RO-B""]->.searchArea;
                         (
-                          node[""amenity""=""restaurant""](area.searchArea);
-                          node[""amenity""=""fast_food""](area.searchArea);
-                          way[""amenity""=""restaurant""](area.searchArea);
-                          way[""amenity""=""fast_food""](area.searchArea);
-                          relation[""amenity""=""restaurant""](area.searchArea);
-                          relation[""amenity""=""fast_food""](area.searchArea);
+                          node[""amenity""=""{amenity}""](area.searchArea);
+                          way[""amenity""=""{amenity}""](area.searchArea);
+                          relation[""amenity""=""{amenity}""](area.searchArea);
                         );
                         out center;";
         }
@@ -30,10 +29,10 @@ namespace ProofOfConcept.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<Locations>> GetAllFoodPlaces()
+        public async Task<List<Locations>> GetAllFoodPlaces(string amenity)
         {
             // Prepare the request with the Overpass query
-            var query = GenerateOverpassQuery();
+            var query = GenerateOverpassQuery(amenity);
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("data", query)
@@ -56,25 +55,18 @@ namespace ProofOfConcept.Services
 
             // Prepare a simplified response
             var locations = new List<Locations>();
-            try
-            {
-                foreach (var element in data.Elements)
-                {
-                    locations.Add(new Locations
-                    {
-                        Id = element.Id,
-                        Type = element.Type,
-                        Lat = element.Lat,
-                        Lon = element.Lon,
-                        Tags = element.Tags
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
 
+            foreach (var element in data.Elements)
+            {
+                locations.Add(new Locations
+                {
+                    Id = element.Id,
+                    Type = element.Type,
+                    Lat = element.Lat,
+                    Lon = element.Lon,
+                    Tags = element.Tags
+                });
             }
-            
 
             return locations;
         }

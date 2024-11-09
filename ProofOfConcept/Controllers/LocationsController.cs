@@ -16,9 +16,9 @@ namespace ProofOfConcept.Controllers
 
         [HttpPost]
         [Route("TestGetLocations")]
-        public async Task<IActionResult> TestGetLocations()
+        public async Task<IActionResult> TestGetLocations([FromBody] string amenity)
         {
-            return Ok(await _locationsService.GetAllFoodPlaces());
+            return Ok(await _locationsService.GetAllFoodPlaces(amenity));
         }
     }
 }

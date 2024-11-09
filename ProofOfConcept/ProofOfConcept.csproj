@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>77cc61a5-6861-41d3-8efb-12f5f7d01137</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,9 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FirebaseAdmin" Version="3.0.1" />
+    <PackageReference Include="FirebaseAdmin" Version="3.1.0" />
     <PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Refit" Version="8.0.0" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

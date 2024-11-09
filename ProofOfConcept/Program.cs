@@ -4,7 +4,9 @@ using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ProofOfConcept.Controllers;
+using ProofOfConcept.Refit;
 using ProofOfConcept.Services;
+using Refit;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,15 +35,17 @@ var config = builder.Configuration;
 //});
 var firebaseApp = FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.FromFile("C:\\Users\\ANDREI\\Downloads\\yeat-7841b-firebase-adminsdk-lfsmj-e6fcfa0b5a.json")
+    Credential = GoogleCredential.FromFile(@"C:\Users\Andrei\Downloads\yeat-7841b-firebase-adminsdk-lfsmj-7768692d5a.json")
 });
 
 builder.Services.AddSingleton(firebaseApp);
 
 // Register FirebaseAuth with a factory that uses the initialized FirebaseApp
 builder.Services.AddSingleton(provider => FirebaseAuth.GetAuth(firebaseApp));
+builder.Services.AddRefitClient<ISerpApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri("https://serpapi.com"));
 
 builder.Services.AddSingleton<ILoginService, LoginService>();
+builder.Services.AddSingleton<ISerpService, SerpService>();
 builder.Services.AddHttpClient<ILocationsService, LocationsService>();
 
 builder.Services.AddAuthentication(options =>
