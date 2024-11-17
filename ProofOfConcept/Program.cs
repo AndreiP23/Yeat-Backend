@@ -54,6 +54,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = "Firebase";
 }).AddScheme<FirebaseAuthenticationSchemeOptions, AuthService>("Firebase", options => { });
 
+//test
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
