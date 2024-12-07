@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using ProofOfConcept.Services;
 
 namespace ProofOfConcept.Controllers
@@ -15,10 +16,12 @@ namespace ProofOfConcept.Controllers
         }
 
         [HttpPost]
+        [EnableCors]
         [Route("TestGetLocations")]
-        public async Task<IActionResult> TestGetLocations([FromBody] string amenity)
+        public async Task<IActionResult> TestGetLocations([FromQuery]string amenity, [FromQuery] double lat, [FromQuery] double lng)
         {
-            return Ok(await _locationsService.GetAllFoodPlaces(amenity));
+            var locations = await _locationsService.GetAllFoodPlaces(amenity, lat, lng);
+            return Ok(locations);
         }
     }
 }

@@ -86,6 +86,7 @@ namespace ProofOfConcept.Services
                 try
                 {
                     var filePath = Path.GetTempFileName();
+                    filePath = Path.ChangeExtension(filePath, "jpg");
 
                     using (var webClient = new WebClient())
                     {

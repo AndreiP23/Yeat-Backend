@@ -1,4 +1,4 @@
-using FirebaseAdmin;
+﻿using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +8,8 @@ using ProofOfConcept.Refit;
 using ProofOfConcept.Services;
 using Refit;
 using System.Text;
+
+var yeatAppName = "Yeat";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +50,17 @@ builder.Services.AddSingleton<ILoginService, LoginService>();
 builder.Services.AddSingleton<ISerpService, SerpService>();
 builder.Services.AddHttpClient<ILocationsService, LocationsService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: yeatAppName,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "Firebase";
@@ -67,5 +80,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(yeatAppName);
 
 app.Run();
