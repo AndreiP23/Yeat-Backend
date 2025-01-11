@@ -8,8 +8,8 @@ namespace ProofOfConcept.Services
     public interface ISerpService
     {
         Task<List<Photos>> GetMenuPhotosForLocationAsync(string dataId);
-        Task<SerpSearchLocation> SearchForPlaceAsync(double logitude, double latitude, string name);
-        Task DownloadPhotosLocally(List<Photos> photosGroup);
+        Task<SerpSearchModel> SearchForPlaceAsync(double logitude, double latitude, string name);
+        Task<List<MenuFile>> DownloadPhotosLocally(List<Photos> photosGroup);
     }
     public class SerpService : ISerpService
     {
@@ -54,7 +54,7 @@ namespace ProofOfConcept.Services
                 return new List<Photos>();
             }
         }
-        public async Task<SerpSearchLocation> SearchForPlaceAsync(double logitude, double latitude, string name)
+        public async Task<SerpSearchModel> SearchForPlaceAsync(double logitude, double latitude, string name)
         {
             var engine = "google_maps";
             var type = "search";
@@ -63,43 +63,57 @@ namespace ProofOfConcept.Services
             var srpApiKey = _configuration["serp-api-key"];
 
             if (srpApiKey is null)
-                return new SerpSearchLocation();
+                return new SerpSearchModel();
 
             var response = await _serpApi.SearchLocationAsync(engine, location, type, srpApiKey, name);
 
             if (response.IsSuccessStatusCode)
             {
+                //place_results??
                 var jsonResponse = response.Content;
                 return jsonResponse;
             }
             else
             {
                 Console.WriteLine($"Error: {response.RequestMessage}");
-                return new SerpSearchLocation();
+                return new SerpSearchModel();
             }
         }
 
-        public async Task DownloadPhotosLocally(List<Photos> photosGroup)
+        public async Task<List<MenuFile>> DownloadPhotosLocally(List<Photos> photosGroup)
         {
+            var results = new List<MenuFile>();
+
             foreach (var photo in photosGroup)
             {
+                var filePath = Path.GetTempFileName();
+                filePath = Path.ChangeExtension(filePath, "jpg");
                 try
                 {
-                    var filePath = Path.GetTempFileName();
-                    filePath = Path.ChangeExtension(filePath, "jpg");
-
                     using (var webClient = new WebClient())
                     {
                         await webClient.DownloadFileTaskAsync(new Uri(photo.image), filePath);
                     }
 
-                    //After this the files should be sent to the OCR logic
+                    var content = await File.ReadAllBytesAsync(filePath);
+
+                    results.Add(new MenuFile()
+                    {
+                        Content = content,
+                        Name = Path.GetFileName(filePath),
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
                 finally
                 {
-                    //delete the temp files created
+                    File.Delete(filePath);
                 }
             }
+
+            return results;
         }
     }
 }

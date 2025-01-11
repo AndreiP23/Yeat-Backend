@@ -9,20 +9,13 @@ namespace ProofOfConcept.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LoginsController : ControllerBase
+    public class LoginsController : BaseController
     {
         private readonly ILoginService _loginService;
 
         public LoginsController(ILoginService loginService)
         {
             _loginService = loginService;
-        }
-
-        [HttpGet]
-        [Route("GetTest")]
-        public string GetTest()
-        {
-            return "test is succesful";
         }
 
         //[HttpPost]

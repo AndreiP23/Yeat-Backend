@@ -5,7 +5,7 @@ namespace ProofOfConcept.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TestSerpController : ControllerBase
+    public class TestSerpController : BaseController
     {
         private readonly ISerpService _serpService;
         public TestSerpController(ISerpService serpService)
@@ -42,9 +42,9 @@ namespace ProofOfConcept.Controllers
 
             var location = await _serpService.SearchForPlaceAsync(logitude, latitude, name);
 
-            if(location.place_results.data_id != null)
+            if(location.data_id != null)
             {
-                var photosGroup = await _serpService.GetMenuPhotosForLocationAsync(location.place_results.data_id);
+                var photosGroup = await _serpService.GetMenuPhotosForLocationAsync(location.data_id);
 
                 if (photosGroup.Count > 0)
                 {

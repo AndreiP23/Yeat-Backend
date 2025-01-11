@@ -6,7 +6,7 @@ namespace ProofOfConcept.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class LocationsController : ControllerBase
+    public class LocationsController : BaseController
     {
         private readonly ILocationsService _locationsService;
 
