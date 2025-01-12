@@ -3,6 +3,7 @@
     public class Locations
     {
         public long Id { get; set; }
+        public string? DataId { get; set; }
         public string? Type { get; set; }
         public double Lat { get; set; }
         public double Lon { get; set; }

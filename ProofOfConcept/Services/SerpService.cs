@@ -2,6 +2,8 @@
 using ProofOfConcept.Models;
 using ProofOfConcept.Refit;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ProofOfConcept.Services
 {
@@ -71,7 +73,9 @@ namespace ProofOfConcept.Services
             {
                 //place_results??
                 var jsonResponse = response.Content;
-                return jsonResponse;
+
+                var jsonToObj = JsonSerializer.Deserialize<SerpSearchModel>(jsonResponse);
+                return jsonToObj;
             }
             else
             {

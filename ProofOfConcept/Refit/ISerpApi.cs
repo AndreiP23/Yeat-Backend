@@ -16,7 +16,7 @@ namespace ProofOfConcept.Refit
           );
 
         [Get("/search")]
-        Task<ApiResponse<SerpSearchModel>> SearchLocationAsync(
+        Task<ApiResponse<string>> SearchLocationAsync(
         [AliasAs("engine")] string engine,           // Search engine (e.g., google_maps)
         [AliasAs("ll")] string location,             // Latitude and longitude (e.g., "@44.4346528,26.0984804,10z")
         [AliasAs("type")] string type,               // Search type (e.g., search)

@@ -37,7 +37,7 @@ var config = builder.Configuration;
 //});
 var firebaseApp = FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.FromFile(@"C:\Users\Andrei\Downloads\yeat-7841b-firebase-adminsdk-lfsmj-7768692d5a.json")
+    Credential = GoogleCredential.FromFile(@"C:\Users\Andrei\Downloads\yeat-7841b-firebase-adminsdk-lfsmj-9352cdbd75.json")
 });
 
 builder.Services.AddSingleton(firebaseApp);
@@ -49,6 +49,7 @@ builder.Services.AddRefitClient<ISerpApi>().ConfigureHttpClient(c => c.BaseAddre
 builder.Services.AddSingleton<ILoginService, LoginService>();
 builder.Services.AddSingleton<ISerpService, SerpService>();
 builder.Services.AddHttpClient<ILocationsService, LocationsService>();
+builder.Services.AddSingleton<ISearchService, SearchService>();
 
 builder.Services.AddCors(options =>
 {

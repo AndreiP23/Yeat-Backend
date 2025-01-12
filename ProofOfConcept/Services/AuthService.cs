@@ -39,7 +39,6 @@ namespace ProofOfConcept.Services
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, decodedToken.Uid),
-                new Claim(ClaimTypes.Name, decodedToken.Claims["name"].ToString()),
                 new Claim("FirebaseToken", token)
             };
 

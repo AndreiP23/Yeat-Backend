@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProofOfConcept.Services;
 
 namespace ProofOfConcept.Controllers
@@ -42,9 +43,9 @@ namespace ProofOfConcept.Controllers
 
             var location = await _serpService.SearchForPlaceAsync(logitude, latitude, name);
 
-            if(location.data_id != null)
+            if(location.place_results.data_id != null)
             {
-                var photosGroup = await _serpService.GetMenuPhotosForLocationAsync(location.data_id);
+                var photosGroup = await _serpService.GetMenuPhotosForLocationAsync(location.place_results.data_id);
 
                 if (photosGroup.Count > 0)
                 {
