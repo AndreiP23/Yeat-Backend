@@ -99,12 +99,13 @@ namespace ProofOfConcept.Services
                         await webClient.DownloadFileTaskAsync(new Uri(photo.image), filePath);
                     }
 
-                    var content = await File.ReadAllBytesAsync(filePath);
+                    //var content = await File.ReadAllBytesAsync(filePath);
 
                     results.Add(new MenuFile()
                     {
-                        Content = content,
-                        Name = Path.GetFileName(filePath),
+                       // Content = content,
+                        FilePath = filePath,
+                        Name = Path.GetFileName(filePath)
                     });
                 }
                 catch (Exception ex)
@@ -113,7 +114,7 @@ namespace ProofOfConcept.Services
                 }
                 finally
                 {
-                    File.Delete(filePath);
+                    //de gaandit cand si cum se sterg
                 }
             }
 

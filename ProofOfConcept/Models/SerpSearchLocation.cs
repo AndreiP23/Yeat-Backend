@@ -12,7 +12,7 @@
         public int position { get; set; }
         public string title { get; set; }
         public string place_id { get; set; }
-        public string data_id { get; set; }
+        public string? data_id { get; set; }
         public string data_cid { get; set; }
         public string reviews_link { get; set; }
         public string photos_link { get; set; }

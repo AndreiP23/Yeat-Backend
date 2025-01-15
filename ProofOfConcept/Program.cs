@@ -45,9 +45,11 @@ builder.Services.AddSingleton(firebaseApp);
 // Register FirebaseAuth with a factory that uses the initialized FirebaseApp
 builder.Services.AddSingleton(provider => FirebaseAuth.GetAuth(firebaseApp));
 builder.Services.AddRefitClient<ISerpApi>().ConfigureHttpClient(c => c.BaseAddress = new Uri("https://serpapi.com"));
+builder.Services.AddRefitClient<IOCR>().ConfigureHttpClient(c => c.BaseAddress = new Uri("http://127.0.0.1:5000"));
 
 builder.Services.AddSingleton<ILoginService, LoginService>();
 builder.Services.AddSingleton<ISerpService, SerpService>();
+builder.Services.AddSingleton<IOCRService, OCRService>();
 builder.Services.AddHttpClient<ILocationsService, LocationsService>();
 builder.Services.AddSingleton<ISearchService, SearchService>();
 

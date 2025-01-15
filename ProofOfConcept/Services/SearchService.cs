@@ -1,5 +1,6 @@
 ﻿using FuzzySharp;
 using ProofOfConcept.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ProofOfConcept.Services
 {
@@ -11,10 +12,12 @@ namespace ProofOfConcept.Services
     {
         private readonly ILocationsService _locationsService;
         private readonly ISerpService _serpService;
-        public SearchService(ILocationsService locationsService, ISerpService serpService)
+        private readonly IOCRService _ocrService;
+        public SearchService(ILocationsService locationsService, ISerpService serpService, IOCRService ocrService)
         {
             _locationsService = locationsService;
             _serpService = serpService;
+            _ocrService = ocrService;
         }
 
         public abstract class LocationHandler
@@ -27,28 +30,43 @@ namespace ProofOfConcept.Services
                 return _nextHandler;
             }
 
-            public abstract Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService);
+            public abstract Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService, IOCRService ocrService);
         }
 
         public class SerpSearchHandler : LocationHandler
         {
-            public override async Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService)
+            public override async Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService, IOCRService ocrService)
             {
                 var searchResult = await serpService.SearchForPlaceAsync(location.Lon, location.Lat, location.Tags["name"]);
 
-                if (searchResult.place_results.data_id == null)
+                if(searchResult == null)
                 {
-                    return false; // Locația nu este validă
+                    return false;
+                }
+                else
+                {
+                    if (searchResult.place_results == null)
+                    {
+                        return false;
+                        
+                    }
+                    else
+                    {
+                        if (searchResult.place_results.data_id == null)
+                        {
+                            return false; // Locația nu este validă
+                        }
+                    }
                 }
 
                 location.DataId = searchResult.place_results.data_id; // Adaugăm `data_id` pentru procesare ulterioară
 
-                return _nextHandler == null || await _nextHandler.HandleAsync(location, userInput, serpService);
+                return _nextHandler == null || await _nextHandler.HandleAsync(location, userInput, serpService, ocrService);
             }
         }
         public class MenuValidationHandler : LocationHandler
         {
-            public override async Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService)
+            public override async Task<bool> HandleAsync(Locations location, string userInput, ISerpService serpService, IOCRService ocrService)
             {
                 if (location.DataId == null)
                 {
@@ -62,20 +80,17 @@ namespace ProofOfConcept.Services
                     return false;
                 }
 
-                var menuFiles = await serpService.DownloadPhotosLocally(photosGroup);
+                var menuFiles = await serpService.DownloadPhotosLocally(photosGroup.Take(5).ToList()); // take 5 is only for development and demo
 
-                foreach (var menuFile in menuFiles)
+
+                var resultedText = await ocrService.GetTextFromPhotosAsync(location.DataId, menuFiles.Select(el => el.FilePath).ToList());
+
+                if (resultedText.Contains(userInput))
                 {
-                    // Aici ar fi un apel OCR (deocamdată simulăm cu un string temporar)
-                    var resultedText = "temp";
-
-                    if (Fuzz.Ratio(resultedText, userInput) >= 90)
-                    {
-                        return true; // Conținutul meniului conține input-ul utilizatorului
-                    }
+                    return true; // Conținutul meniului conține input-ul utilizatorului
                 }
 
-                return false; 
+                return false;
             }
         }
 
@@ -91,7 +106,7 @@ namespace ProofOfConcept.Services
             var validLocations = new List<Locations>();
             foreach (var location in locations)
             {
-                if (await handlerChain.HandleAsync(location, userInput, _serpService))
+                if (await handlerChain.HandleAsync(location, userInput, _serpService, _ocrService))
                 {
                     validLocations.Add(location);
                 }

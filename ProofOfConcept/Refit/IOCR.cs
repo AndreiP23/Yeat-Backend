@@ -1,7 +1,13 @@
-﻿namespace ProofOfConcept.Refit
+﻿using Microsoft.AspNetCore.Mvc;
+using ProofOfConcept.Models;
+using Refit;
+
+namespace ProofOfConcept.Refit
 {
     public interface IOCR
     {
-        //place to put the request to the ocr
+        [Multipart]
+        [Post("/ocr-images")]
+        Task<ApiResponse<string>> GetTextFromMenuPhotosAsync(string PlaceId,StreamPart menuFile);
     }
 }
