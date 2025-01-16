@@ -1,4 +1,5 @@
 ﻿using FuzzySharp;
+using Microsoft.IdentityModel.Tokens;
 using ProofOfConcept.Models;
 using System.Reflection.Metadata.Ecma335;
 
@@ -75,6 +76,11 @@ namespace ProofOfConcept.Services
 
                 var photosGroup = await serpService.GetMenuPhotosForLocationAsync(location.DataId);
 
+                if (photosGroup == null)
+                {
+                    return false;
+                }
+
                 if (photosGroup.Count == 0)
                 {
                     return false;
@@ -96,7 +102,7 @@ namespace ProofOfConcept.Services
 
         public async Task<List<Locations?>> ProcessLocation(string selectedAmenity, double latitudeUser, double logitudeUser, string userInput)
         {
-            var locations = (await _locationsService.GetAllFoodPlaces(selectedAmenity, latitudeUser, logitudeUser)).Take(5).ToList();
+            var locations = (await _locationsService.GetAllFoodPlaces(selectedAmenity, latitudeUser, logitudeUser)).Take(10).ToList();
 
             // Construim lanțul de procesare
             var handlerChain = new SerpSearchHandler();

@@ -1,4 +1,5 @@
 ﻿using FuzzySharp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProofOfConcept.Models;
 using ProofOfConcept.Services;
@@ -16,6 +17,7 @@ namespace ProofOfConcept.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("ProcessLocationsAndFindMatches")]
         public async Task<IActionResult> ProcessLocationsAndFindMatches(double logitudeUser, double latitudeUser, string userInput, string selectedAmenity)
         {

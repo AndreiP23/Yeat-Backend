@@ -37,7 +37,7 @@ var config = builder.Configuration;
 //});
 var firebaseApp = FirebaseApp.Create(new AppOptions
 {
-    Credential = GoogleCredential.FromFile(@"C:\Users\Andrei\Downloads\yeat-7841b-firebase-adminsdk-lfsmj-9352cdbd75.json")
+    Credential = GoogleCredential.FromFile(@"C:\Users\tavi_\Documents\firebase_backend\yeat-7841b-firebase-adminsdk-lfsmj-2a42250f92.json")
 });
 
 builder.Services.AddSingleton(firebaseApp);
