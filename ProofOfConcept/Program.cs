@@ -76,6 +76,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors(yeatAppName);
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -83,7 +85,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors(yeatAppName);
 
 app.Run();

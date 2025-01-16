@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ProofOfConcept.Services;
 
@@ -17,6 +18,7 @@ namespace ProofOfConcept.Controllers
 
         [HttpPost]
         [EnableCors]
+        [AllowAnonymous]
         [Route("TestGetLocations")]
         public async Task<IActionResult> TestGetLocations([FromQuery]string amenity, [FromQuery] double lat, [FromQuery] double lng)
         {
