@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using ProofOfConcept.Models;
+﻿using ProofOfConcept.Models;
 using ProofOfConcept.Refit;
+using Newtonsoft.Json;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ProofOfConcept.Services
 {
     public interface ISerpService
     {
         Task<List<Photos>> GetMenuPhotosForLocationAsync(string dataId);
-        Task<SerpSearchModel> SearchForPlaceAsync(double logitude, double latitude, string name);
+        Task<Root> SearchForPlaceAsync(double logitude, double latitude, string name);
         Task<List<MenuFile>> DownloadPhotosLocally(List<Photos> photosGroup);
     }
     public class SerpService : ISerpService
@@ -56,31 +54,32 @@ namespace ProofOfConcept.Services
                 return new List<Photos>();
             }
         }
-        public async Task<SerpSearchModel> SearchForPlaceAsync(double logitude, double latitude, string name)
+        public async Task<Root> SearchForPlaceAsync(double logitude, double latitude, string name)
         {
             var engine = "google_maps";
             var type = "search";
+            var city = "Bucharest, Romania";
 
             var location = $"@{latitude},{logitude},10z"; // Latitude, Longitude, Zoom
             var srpApiKey = _configuration["serp-api-key"];
 
             if (srpApiKey is null)
-                return new SerpSearchModel();
+                return new Root();
 
-            var response = await _serpApi.SearchLocationAsync(engine, location, type, srpApiKey, name);
+            var response = await _serpApi.SearchLocationAsync(engine, location, city, type, srpApiKey, name);
 
             if (response.IsSuccessStatusCode)
             {
                 //place_results??
                 var jsonResponse = response.Content;
 
-                var jsonToObj = JsonSerializer.Deserialize<SerpSearchModel>(jsonResponse);
+                var jsonToObj = JsonConvert.DeserializeObject<Root>(jsonResponse);
                 return jsonToObj;
             }
             else
             {
                 Console.WriteLine($"Error: {response.RequestMessage}");
-                return new SerpSearchModel();
+                return new Root();
             }
         }
 

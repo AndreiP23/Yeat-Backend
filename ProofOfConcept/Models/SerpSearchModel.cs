@@ -2,19 +2,19 @@
 {
     public class SerpSearchModel
     {
-        public Place place_results { get; set; }
-    }
+        public List<Place>? place_results { get; set; } // din cauza serp ca nu raspunde cum trb
+        public List<Place>? local_results { get; set; }
 
-    public class GpsCoordinates
-    {
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public List<Place> GetResults()
+        {
+            return place_results?.Any() == true ? place_results : local_results;
+        }
     }
 
     public class DayProgram
     {
-        public string day { get; set; }
-        public string hours { get; set; }
+        public string? day { get; set; }
+        public string? hours { get; set; }
     }
 
     public class ServiceOptions

@@ -10,7 +10,7 @@ namespace ProofOfConcept.Services
     public class LocationsService : ILocationsService
     {
         private static readonly string OverpassUrl = "https://overpass-api.de/api/interpreter";
-        private string GenerateOverpassQuery(string amenity, double? latitude = null, double? longitude = null, int radiusMeters = 3000)
+        private string GenerateOverpassQuery(string amenity, double? latitude = null, double? longitude = null, int radiusMeters = 5000)
         {
             // If coordinates are provided, use radius-based search
             if (latitude.HasValue && longitude.HasValue)
